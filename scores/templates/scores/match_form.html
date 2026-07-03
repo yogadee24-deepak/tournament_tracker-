@@ -1,0 +1,38 @@
+{% extends 'scores/base.html' %}
+{% block content %}
+    <h2>{{ title }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="team_one">Team One Name:</label>
+            <input type="text" id="team_one" name="team_one" value="{{ match.team_one }}" required>
+        </div>
+        <div class="form-group">
+            <label for="team_two">Team Two Name:</label>
+            <input type="text" id="team_two" name="team_two" value="{{ match.team_two }}" required>
+        </div>
+        <div class="form-group">
+            <label for="team_one_score">Team One Score:</label>
+            <input type="number" id="team_one_score" name="team_one_score" value="{{ match.team_one_score|default:0 }}" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="team_two_score">Team Two Score:</label>
+            <input type="number" id="team_two_score" name="team_two_score" value="{{ match.team_two_score|default:0 }}" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="match_status">Match Status:</label>
+            <select id="match_status" name="match_status">
+                <option value="Upcoming" {% if match.match_status == "Upcoming" %}selected{% endif %}>Upcoming</option>
+                <option value="Live" {% if match.match_status == "Live" %}selected{% endif %}>Live</option>
+                <option value="Completed" {% if match.match_status == "Completed" %}selected{% endif %}>Completed</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="match_date">Match Date & Time:</label>
+            <input type="datetime-local" id="match_date" name="match_date" value="{{ formatted_date }}" required>
+        </div>
+        
+        <button type="submit" class="btn btn-secondary">Save Match</button>
+        <a href="{% url 'match_list' %}" style="margin-left: 15px; color: #7f8c8d;">Cancel</a>
+    </form>
+{% endblock %}

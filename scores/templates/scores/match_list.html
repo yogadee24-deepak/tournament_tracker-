@@ -1,0 +1,42 @@
+{% extends 'scores/base.html' %}
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Match Schedule & Scores</h2>
+        <a href="{% url 'add_match' %}" class="btn btn-secondary">+ Track New Match</a>
+    </div>
+
+    {% if matches %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date & Time</th>
+                <th>Matchup</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+            <tr>
+                <td>{{ match.match_date|date:"M d, Y H:i" }}</td>
+                <td><strong>{{ match.team_one }}</strong> vs <strong>{{ match.team_two }}</strong></td>
+                <td><span style="font-size: 18px; font-weight: bold;">{{ match.team_one_score }} - {{ match.team_two_score }}</span></td>
+                <td><span class="badge {{ match.match_status }}">{{ match.match_status }}</span></td>
+                <td>
+                    <div style="display: flex; justify-content: center; gap: 5px;">
+                        <a href="{% url 'edit_match' match.id %}" class="btn" style="background-color: #f39c12;">Update</a>
+                        <form action="{% url 'delete_match' match.id %}" method="post" onsubmit="return confirm('Remove match from history?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p style="margin-top: 30px; text-align: center; color: #7f8c8d;">No tournament matches listed yet. Click button above to add one!</p>
+    {% endif %}
+{% endblock %}
